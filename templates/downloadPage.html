@@ -5,16 +5,20 @@
     <title>Download Images</title>
 </head>
 <body>
-    <h1>Downloaded Images</h1>
-    <ul>
-        {% for file in files %}
-            <li>{{ file }}</li>
-        {% endfor %}
-    </ul>
-
-    <!-- Button to download all files as a ZIP -->
-    <form action="/download_all" method="GET">
-        <input type="submit" value="Download All Files as ZIP">
-    </form>
+    <div class="container">
+        <h1>Download Images</h1>
+        <ul class="file-list">
+            {% for file in files %}
+            <li>
+                <span>{{ file }}</span>
+                <a href="{{ url_for('download_file', filename=file) }}" class="download-button">Download</a>
+            </li>
+            {% endfor %}
+        </ul>
+            <!-- Button to download all files as a ZIP -->
+        <form action="/download_all" method="GET">
+            <input type="submit" value="Download All Files as ZIP">
+        </form>
+    </div>
 </body>
 </html>
