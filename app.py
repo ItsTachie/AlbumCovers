@@ -137,6 +137,8 @@ def get_token():
 
 
 def create_spotify_oauth():
+    redirect_uri = url_for("redirect", _external=True)
+    print("Debug: Redirect URI:", redirect_uri)
     return SpotifyOAuth(client_id=CLIENT_ID,
                         client_secret=CLIENT_SECRET,
                         redirect_uri=url_for("redirect", _external=True),
