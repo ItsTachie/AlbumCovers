@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download Images</title>
+</head>
+<body>
+    <h1>Downloaded Images</h1>
+    <ul>
+        {% for file in files %}
+            <li>{{ file }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Button to download all files as a ZIP -->
+    <form action="/download_all" method="GET">
+        <input type="submit" value="Download All Files as ZIP">
+    </form>
+</body>
+</html>
