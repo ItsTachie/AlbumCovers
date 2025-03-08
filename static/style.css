@@ -1,3 +1,4 @@
+
 /* General Styles */
 body {
     font-family: 'Arial', sans-serif;
@@ -191,5 +192,28 @@ footer a {
 }
 
 footer a:hover {
+    text-decoration: underline;
+}
+
+/* Spotify Attribution */
+.spotify-attribution {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.spotify-logo {
+    width: 70px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.spotify-link {
+    color: #1DB954; /* Spotify green */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.spotify-link:hover {
     text-decoration: underline;
 }

@@ -7,7 +7,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div class="spotify-attribution">
+        <img src="{{ url_for('static', filename='spotify-logo.png') }}" alt="Spotify Logo" width =220 height=70 class="spotify-logo">
+    </div>
+
     <div class="container">
+        <a href="https://open.spotify.com/collection/albums" target="_blank" class="spotify-link">
+            View your saved albums on Spotify
+        </a>
         <h1>Your Album Covers</h1>
         <ul class="file-list">
             {% for file in files %}
