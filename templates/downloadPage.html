@@ -17,7 +17,22 @@
             </li>
             {% endfor %}
         </ul>
-        <a href="{{ url_for('download_all') }}" class="download-button download-all-button">Download All</a>
+        <div>
+            <form action="/download_all" method="GET">
+                <input type="submit" value="Download All">
+            </form>
+            <br> </br>
+            <form action="/disconnect" method="GET">
+                <input type="submit" value="Disconnect">
+            </form>
+        <div>
+
+        <footer>
+            <p><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></p>
+        </footer>
+
     </div>
+
+
 </body>
 </html>

@@ -6,6 +6,7 @@ import os
 import re
 import time
 import requests
+from base64 import b64encode
 import zipfile
 from io import BytesIO
 
@@ -17,7 +18,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 SCOPE = 'user-library-read'
 
 app = Flask(__name__)
-app.secret_key = "elLtc+yL-%@Qv2-!cV"  # Replace with a secure key
+app.secret_key = os.urandom(24).hex()  # Replace with a secure key
 
 # Folder to save downloaded images
 DOWNLOAD_FOLDER = 'downloads'
@@ -52,6 +53,17 @@ def download_file(filename):
     # Serve the file for download
     return send_from_directory(user_folder, filename, as_attachment=True)
 
+@app.route("/disconnect")
+def disconnect():
+    # Clear the session
+    session.clear()
+
+    # Revoke the access token
+    token_info = session.get("token_info")
+    if token_info:
+        revoke_token(token_info["access_token"])
+
+    return redirect(url_for("home"))
 
 @app.route("/redirect")
 def redirect_page():
@@ -156,6 +168,10 @@ def download_all():
         download_name='album_covers.zip'
     )
 
+@app.route("/privacy-policy")
+def privacy_policy():
+    return render_template("privacy_policy.html")
+
 def get_user_id():
     user_ids = []
     for key in session:
@@ -189,6 +205,27 @@ def get_token(user_id):
         session[f"{user_id}_token_info"] = token_info  # Update the session with the new token
 
     return token_info
+
+def revoke_token(token):
+    # Encode client ID and secret for Basic Auth
+    client_creds = f"{CLIENT_ID}:{CLIENT_SECRET}"
+    client_creds_b64 = b64encode(client_creds.encode()).decode()
+
+    # Make the revocation request
+    response = requests.post(
+        "https://accounts.spotify.com/api/token/revoke",
+        headers={
+            "Authorization": f"Basic {client_creds_b64}",
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data={"token": token},
+    )
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        print("Debug: Token revoked successfully.")
+    else:
+        print(f"Debug: Failed to revoke token. Status code: {response.status_code}")
 
 def create_spotify_oauth():
     redirect_uri = url_for("redirect_page", _external=True)

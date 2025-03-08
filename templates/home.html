@@ -6,14 +6,33 @@
 </head>
 <body>
     <div class="container">
-        <h1>Album cover downloader</h1>
-        <p> 
-            All the album covers you want to download need to be in your saved library on spotify. 
-            If they aren't already there do this before continuing!!!
-        </p>
+        <h1>Welcome to Album Cover Downloader</h1>
+        <p>This app allows you to download high-quality cover art for your saved Spotify albums.</p>
+
+        <h2>How to Use</h2>
+        <ol>
+            <li>Click the <strong>Login with Spotify</strong> button below to authorize the app.</li>
+            <li>Once logged in, you'll see a list of your saved albums.</li>
+            <li>Click <strong>Download</strong> next to an album to download its cover art.</li>
+            <li>Use the <strong>Download All</strong> button to download all album covers as a ZIP file.</li>
+        </ol>
+
+        <h2>How to Disconnect</h2>
+        <p>To disconnect your Spotify account and revoke access:</p>
+        <ol>
+            <li>Click the <strong>Disconnect</strong> button. After you have logged in.</li>
+        </ol>
+
+        <h2>Contact Support</h2>
+        <p>If you have any questions or need assistance, please contact us at <a href="mailto:support@albumcoverdownloader.com">support@albumcoverdownloader.com</a>.</p>
+
         <form action="/login" method="GET">
-            <input type="submit" value="DONE">
+            <input type="submit" value="Login with Spotify">
         </form>
+
+        <footer>
+            <p><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></p>
+        </footer>
     </div>
 </body>
 </html>
