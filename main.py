@@ -37,7 +37,21 @@ def login():
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    return send_from_directory(DOWNLOAD_FOLDER, filename, as_attachment=True)
+    # Get the user's Spotify ID from the session
+    user_id = get_user_id()
+    if not user_id:
+        return "User not logged in.", 400
+
+    # Construct the path to the user's folder
+    user_folder = os.path.join(DOWNLOAD_FOLDER, user_id)
+
+    # Ensure the file exists
+    if not os.path.exists(os.path.join(user_folder, filename)):
+        return "File not found.", 404
+
+    # Serve the file for download
+    return send_from_directory(user_folder, filename, as_attachment=True)
+
 
 @app.route("/redirect")
 def redirect_page():
@@ -92,35 +106,54 @@ def getImages():
             images[name] = url
         offset += limit
 
-    # Save images to the download folder
+    # Create a folder for the user if it doesn't exist
+    user_folder = os.path.join(DOWNLOAD_FOLDER, user_id)
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+
+    # Save images to the user's folder
     pattern = r'[<>:"/\\|?*]'
     for album, cover_image in images.items():
         response = requests.get(cover_image)
         if response.status_code == 200:
             clean_album_name = re.sub(pattern, "", album) + ".jpg"
-            save_path = os.path.join(DOWNLOAD_FOLDER, clean_album_name)
+            save_path = os.path.join(user_folder, clean_album_name)
             with open(save_path, 'wb') as f:
                 f.write(response.content)
         else:
             print(f"Failed to download image for album: {album}")
 
-    # List files in the download folder
-    files = os.listdir(DOWNLOAD_FOLDER)
-    return render_template('downloadPage.html', files=files)
+    # List files in the user's folder
+    files = os.listdir(user_folder)
+    return render_template('downloadPage.html', files=files, user_id=user_id)
+
 
 @app.route('/download_all')
 def download_all():
+    # Get the user's Spotify ID from the session
+    user_id = get_user_id()
+    if not user_id:
+        return "User not logged in.", 400
+
+    # Construct the path to the user's folder
+    user_folder = os.path.join(DOWNLOAD_FOLDER, user_id)
+
+    # Create a ZIP file in memory
     memory_file = BytesIO()
     with zipfile.ZipFile(memory_file, 'w') as zipf:
-        for file in os.listdir(DOWNLOAD_FOLDER):
-            file_path = os.path.join(DOWNLOAD_FOLDER, file)
+        for file in os.listdir(user_folder):
+            file_path = os.path.join(user_folder, file)
             zipf.write(file_path, arcname=file)
+
+    # Move the cursor to the beginning of the file
     memory_file.seek(0)
+
+    # Return the ZIP file as a downloadable response
     return send_file(
         memory_file,
         mimetype='application/zip',
         as_attachment=True,
-        download_name='downloaded_files.zip'
+        download_name='album_covers.zip'
     )
 
 def get_user_id():

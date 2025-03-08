@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Download Images</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Album Covers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Download Images</h1>
+        <h1>Your Album Covers</h1>
         <ul class="file-list">
             {% for file in files %}
             <li>
@@ -15,10 +17,7 @@
             </li>
             {% endfor %}
         </ul>
-            <!-- Button to download all files as a ZIP -->
-        <form action="/download_all" method="GET">
-            <input type="submit" value="Download All Files as ZIP">
-        </form>
+        <a href="{{ url_for('download_all') }}" class="download-button download-all-button">Download All</a>
     </div>
 </body>
 </html>
